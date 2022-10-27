@@ -1,0 +1,111 @@
+   mysql> create table postacie (id_postaci INT PRIMARY KEY AUTO_INCREMENT, nazwa VARCHAR(40), rodzaj ENUM('wiking', 'ptak', 'kobieta'), data_ur DATE, wiek INT UNSIGNED)
+    -> ;
+
+mysql> INSERT INTO postacie (nazwa,rodzaj,data_ur,wiek) VALUES ('bjorn', 'wiking', '1958-02-28', '64');
+Query OK, 1 row affected (0.00 sec)
+
+
+mysql> INSERT INTO postacie (nazwa,rodzaj,data_ur,wiek) VALUES ('drozd', 'ptak', '1410.07.15', '612');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO postacie (nazwa,rodzaj,data_ur,wiek) VALUES ('tesciowa', 'kobieta', '1936.06.01', '88'
+);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select *from postacie ;
++------------+----------+---------+------------+------+
+| id_postaci | nazwa    | rodzaj  | data_ur    | wiek |
++------------+----------+---------+------------+------+
+|          7 | bjorn    | wiking  | 1958-02-28 |   64 |
+|          8 | drozd    | ptak    | 1410-07-15 |  612 |
+|          9 | tesciowa | kobieta | 1936-06-01 |   88 |
++------------+----------+---------+------------+------+
+3 rows in set (0.01 sec)
+
+
+mysql> create table walizka (id_walizki INT PRIMARY KEY AUTO_INCREMENT, pojemnosc INT UNSIGNED, kolor ENUM('rozowy', 'czerwony', 'teczowy', 'zolty'), id_wlasciciela INT, FOREIGN KEY(id_wlasciciela) REFERENCES postacie(id_postaci) ON DELETE CASCADE);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select *from walizka
+    -> ;
+Empty set (0.01 sec)
+
+mysql> ALTER TABLE walizka ALTER kolor SET DEFAULT 'rozowy';
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select *from walizka
+    ->
+    -> ;
+Empty set (0.00 sec)
+
+
+mysql> SELECT *FROM postacie
+    -> ;
++------------+----------+---------+------------+------+
+| id_postaci | nazwa    | rodzaj  | data_ur    | wiek |
++------------+----------+---------+------------+------+
+|          7 | bjorn    | wiking  | 1958-02-28 |   64 |
+|          8 | drozd    | ptak    | 1410-07-15 |  612 |
+|          9 | tesciowa | kobieta | 1936-06-01 |   88 |
++------------+----------+---------+------------+------+
+3 rows in set (0.06 sec)
+
+
+mysql> INSERT INTO walizka (pojemnosc, kolor, id_wlasciciela) VALUES ('20', 'zolty', '7');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT *FROM walizka
+    -> ;
++------------+-----------+-------+----------------+
+| id_walizki | pojemnosc | kolor | id_wlasciciela |
++------------+-----------+-------+----------------+
+|          1 |        20 | zolty |              7 |
++------------+-----------+-------+----------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO walizka (pojemnosc, kolor, id_wlasciciela) VALUES ('300', 'teczowy', '9');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT *FROM walizka;
++------------+-----------+---------+----------------+
+| id_walizki | pojemnosc | kolor   | id_wlasciciela |
++------------+-----------+---------+----------------+
+|          1 |        20 | zolty   |              7 |
+|          2 |       300 | teczowy |              9 |
++------------+-----------+---------+----------------+
+2 rows in set (0.00 sec)
+
+
+mysql> create table izba (adres_budynku VARCHAR(40), nazwa_izby VARCHAR(40), metraz INT UNSIGNED, wlasciciel INT, FOREIGN KEY (wlasciciel) REFERENCES postacie(id_postaci) ON DELETE SET NULL);
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> ALTER TABLE izba ADD PRIMARY KEY (adres_budynku, nazwa_izby);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE izba ADD kolor_izby VARCHAR(40) AFTER metraz;
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE izba ALTER kolor_izby SET DEFAULT 'czarny';
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+
+mysql> SELECT *FROM izba
+    -> ;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO izba (adres_budynku, nazwa_izby, metraz, kolor_izby, wlasciciel) VALUES ('podziemna 102', 'spizarnia', '15', 'czarny', '8');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT *FROM izba;
++---------------+------------+--------+------------+------------+
+| adres_budynku | nazwa_izby | metraz | kolor_izby | wlasciciel |
++---------------+------------+--------+------------+------------+
+| podziemna 102 | spizarnia  |     15 | czarny     |          8 |
++---------------+------------+--------+------------+------------+
+1 row in set (0.00 sec)
+
