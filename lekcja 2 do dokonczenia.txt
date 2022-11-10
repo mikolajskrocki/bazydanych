@@ -213,3 +213,158 @@ mysql> SELECT *FROM postacie
 +------------+----------+---------+------------+------+---------+--------------+------------+
 6 rows in set (0.00 sec)
 
+
+mysql> insert into postacie (nazwa, rodzaj, data_ur, wiek, pesel) VALUES ('Gertruda Nieszczera', 'syrena', '2000-01-01', '22', '1
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select *from postacie
+    -> ;
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+| id_postaci | nazwa               | rodzaj  | data_ur    | wiek | funckja | nazwa_statku | pesel      |
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+|         25 | Gertruda Nieszczera | syrena  | 2000-01-01 |   22 | NULL    | NULL         |  123123123 |
+|          9 | tesciowa            | kobieta | 1936-06-01 |   88 | NULL    | NULL         |  222222222 |
+|         12 | Mariusz             | wiking  | NULL       | NULL | NULL    | biala        |  222222223 |
+|         13 | Dariusz             | wiking  | NULL       | NULL | NULL    | czarna       |  222222224 |
+|         14 | Jedrzej             | wiking  | NULL       | NULL | NULL    | biala        |  222222225 |
+|          8 | drozd               | ptak    | 1410-07-15 |  612 | NULL    | NULL         |  333333333 |
+|          7 | bjorn               | wiking  | 1958-02-28 |   64 | kapitan | biala        | 1111111111 |
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+7 rows in set (0.00 sec)
+
+mysql> update postacie set nazwa_statku='biala' where nazwa LIKE '%a%';
+Query OK, 3 rows affected (0.00 sec)
+Rows matched: 4  Changed: 3  Warnings: 0
+
+mysql> select *from postacie
+    -> ;
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+| id_postaci | nazwa               | rodzaj  | data_ur    | wiek | funckja | nazwa_statku | pesel      |
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+|         25 | Gertruda Nieszczera | syrena  | 2000-01-01 |   22 | NULL    | biala        |  123123123 |
+|          9 | tesciowa            | kobieta | 1936-06-01 |   88 | NULL    | biala        |  222222222 |
+|         12 | Mariusz             | wiking  | NULL       | NULL | NULL    | biala        |  222222223 |
+|         13 | Dariusz             | wiking  | NULL       | NULL | NULL    | biala        |  222222224 |
+|         14 | Jedrzej             | wiking  | NULL       | NULL | NULL    | biala        |  222222225 |
+|          8 | drozd               | ptak    | 1410-07-15 |  612 | NULL    | NULL         |  333333333 |
+|          7 | bjorn               | wiking  | 1958-02-28 |   64 | kapitan | biala        | 1111111111 |
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+7 rows in set (0.00 sec)
+
+mysql> select *from statek
+    -> ;
++--------------+---------------+----------------+---------------+
+| nazwa_statku | rodzaj_statku | data_wodowania | max_ladownosc |
++--------------+---------------+----------------+---------------+
+| biala        | drakkar       | 1410-07-02     |         18200 |
+| czarna       | sneka         | 1410-06-01     |          7200 |
++--------------+---------------+----------------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> update statek set max_ladownosc=(max_ladownosc*0.7) WHERE data_wodowania<'1999-01-01';
+Query OK, 2 rows affected (0.00 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> select *from statek
+    -> ;
++--------------+---------------+----------------+---------------+
+| nazwa_statku | rodzaj_statku | data_wodowania | max_ladownosc |
++--------------+---------------+----------------+---------------+
+| biala        | drakkar       | 1410-07-02     |         12740 |
+| czarna       | sneka         | 1410-06-01     |          5040 |
++--------------+---------------+----------------+---------------+
+2 rows in set (0.00 sec)
+
+
+mysql> alter table postacie add check(wiek<1000);
+Query OK, 7 rows affected (0.11 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> update postacie set wiek = 1999 where id_postaci=14;
+ERROR 3819 (HY000): Check constraint 'postacie_chk_1' is violated.
+
+mysql> insert into postacie (id_postaci, nazwa, data_ur, wiek, pesel) VALUES ('26', 'Loko', '1321-11-10', '700', '99999999');   Query OK, 1 row affected (0.01 sec)
+
+mysql> create table marynarze LIKE postacie;
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> insert into marynarze (id_postaci, nazwa, rodzaj, data_ur, wiek, funckja, nazwa_statku, pesel) SELECT *from postacie WHERE nazwa_statku IS NOT NULL;
+Query OK, 6 rows affected (0.01 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select *from marynarze;
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+| id_postaci | nazwa               | rodzaj  | data_ur    | wiek | funckja | nazwa_statku | pesel      |
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+|         25 | Gertruda Nieszczera | syrena  | 2000-01-01 |   22 | NULL    | biala        |  123123123 |
+|          9 | tesciowa            | kobieta | 1936-06-01 |   88 | NULL    | biala        |  222222222 |
+|         12 | Mariusz             | wiking  | 1826-01-01 |  185 | NULL    | biala        |  222222223 |
+|         13 | Dariusz             | wiking  | 1426-01-01 |  629 | NULL    | biala        |  222222224 |
+|         14 | Jedrzej             | wiking  | 0000-08-05 |  999 | NULL    | biala        |  222222225 |
+|          7 | bjorn               | wiking  | 1958-02-28 |   64 | kapitan | biala        | 1111111111 |
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+6 rows in set (0.00 sec)
+
+mysql> update marynarze set nazwa_statku = null where nazwa_statku IS NOT NULL;
+Query OK, 6 rows affected (0.00 sec)
+Rows matched: 6  Changed: 6  Warnings: 0
+
+mysql> select *from marynarze;
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+| id_postaci | nazwa               | rodzaj  | data_ur    | wiek | funckja | nazwa_statku | pesel      |
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+|         25 | Gertruda Nieszczera | syrena  | 2000-01-01 |   22 | NULL    | NULL         |  123123123 |
+|          9 | tesciowa            | kobieta | 1936-06-01 |   88 | NULL    | NULL         |  222222222 |
+|         12 | Mariusz             | wiking  | 1826-01-01 |  185 | NULL    | NULL         |  222222223 |
+|         13 | Dariusz             | wiking  | 1426-01-01 |  629 | NULL    | NULL         |  222222224 |
+|         14 | Jedrzej             | wiking  | 0000-08-05 |  999 | NULL    | NULL         |  222222225 |
+|          7 | bjorn               | wiking  | 1958-02-28 |   64 | kapitan | NULL         | 1111111111 |
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+6 rows in set (0.00 sec)
+
+mysql> delete from marynarze where id_postaci = 13;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from marynarze;
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+| id_postaci | nazwa               | rodzaj  | data_ur    | wiek | funckja | nazwa_statku | pesel      |
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+|         25 | Gertruda Nieszczera | syrena  | 2000-01-01 |   22 | NULL    | NULL         |  123123123 |
+|          9 | tesciowa            | kobieta | 1936-06-01 |   88 | NULL    | NULL         |  222222222 |
+|         12 | Mariusz             | wiking  | 1826-01-01 |  185 | NULL    | NULL         |  222222223 |
+|         14 | Jedrzej             | wiking  | 0000-08-05 |  999 | NULL    | NULL         |  222222225 |
+|          7 | bjorn               | wiking  | 1958-02-28 |   64 | kapitan | NULL         | 1111111111 |
++------------+---------------------+---------+------------+------+---------+--------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> delete from statek;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`skrockim`.`postacie`, CONSTRAINT `postacie_ibfk_1` FOREIGN KEY (`nazwa_statku`) REFERENCES `statek` (`nazwa_statku`))
+
+mysql> alter table postacie drop foreign key postacie_ibfk_1;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> delete from statek;
+Query OK, 2 rows affected (0.00 sec)
+
+mysql> drop table statek;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create table zwierz (id_zwierza INT NOT NULL PRIMARY KEY AUTO_INCREMENT, nazwa varchar(40), wiek INT)
+    -> ;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> insert into zwierz (nazwa, wiek) VALUES ('Loko', '700');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into zwierz (nazwa, wiek) VALUES ('drozd', '612');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select *from zwierz;
++------------+-------+------+
+| id_zwierza | nazwa | wiek |
++------------+-------+------+
+|          1 | Loko  |  700 |
+|          2 | drozd |  612 |
++------------+-------+------+
+
