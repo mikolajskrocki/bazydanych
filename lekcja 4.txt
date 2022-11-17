@@ -1,7 +1,0 @@
-mysql> select  avg(waga) as 'srednia waga wikingow' from kreatura where rodzaj = 'wiking';
-+-----------------------+
-| srednia waga wikingow |
-+-----------------------+
-|               95.1111 |
-+-----------------------+
-1 row in set (0.00 sec)

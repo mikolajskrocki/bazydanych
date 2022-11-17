@@ -1,0 +1,48 @@
+mysql> select  avg(waga) as 'srednia waga wikingow' from kreatura where rodzaj = 'wiking';
++-----------------------+
+| srednia waga wikingow |
++-----------------------+
+|               95.1111 |
++-----------------------+
+1 row in set (0.00 sec)
+
+mysql> select rodzaj, AVG(waga) as 'srednia waga', COUNT(rodzaj) as 'liczba kreatur' from kreatura group by rodzaj;
++---------+--------------+----------------+
+| rodzaj  | srednia waga | liczba kreatur |
++---------+--------------+----------------+
+| wiking  |      95.1111 |              9 |
+| ryba    |    1050.5000 |              2 |
+| waz     |       3.0000 |              1 |
+| ptak    |       2.0000 |              2 |
+| wiedzma |      41.2500 |              4 |
+| malpa   |      32.0000 |              1 |
++---------+--------------+----------------+
+6 rows in set (0.00 sec)
+
+mysql> select rodzaj, AVG(2022 - YEAR(dataur)) as 'sredni wiek' from kreatura group by rodzaj;
++---------+-------------+
+| rodzaj  | sredni wiek |
++---------+-------------+
+| wiking  |    351.5556 |
+| ryba    |    346.5000 |
+| waz     |    345.0000 |
+| ptak    |    346.5000 |
+| wiedzma |    530.7500 |
+| malpa   |    350.0000 |
++---------+-------------+
+6 rows in set (0.00 sec)
+
+mysql> select rodzaj, SUM(waga) as 'suma wag' from zasob group by rodzaj;
++--------------------+----------+
+| rodzaj             | suma wag |
++--------------------+----------+
+| jedzenie           |   130.00 |
+| narzedzie          |    13.00 |
+| NULL               |     9.10 |
+| ubranie            |    33.10 |
+| narzedzie zbrodni  |     6.00 |
+| material budowlany |     0.60 |
+| miejsce wypoczynku |     4.00 |
++--------------------+----------+
+7 rows in set (0.00 sec)
+
