@@ -205,3 +205,12 @@ mysql> select concat (k1.nazwa, " - ",  k1.idkreatury) as nazwa1, concat (k2.naz
 | Ara - 12      | sztuczna szczeka tesciowej - 17 |
 | Szczeki - 13  | Tesciowa dziadka - 18           |
 +---------------+---------------------------------+
+
+mysql> select kreatura.rodzaj,avg(zasob.waga *zasob.ilosc) as sredniawaga from kreatura join ekwipunek on ekwipunek.idkreatury=kreatura.idkreatury join zasob on zasob.idzasobu=ekwipunek.idzasobu where kreatura.rodzaj != 'malpa' AND kreatura.rodzaj != 'waz' group by rodzaj having sum(ekwipunek.ilosc) <30;
++---------+-------------+
+| rodzaj  | sredniawaga |
++---------+-------------+
+| ryba    |   24.000000 |
+| ptak    |    8.000000 |
+| wiedzma |    3.250000 |
++---------+-------------+
