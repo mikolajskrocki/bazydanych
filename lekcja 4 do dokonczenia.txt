@@ -46,3 +46,162 @@ mysql> select rodzaj, SUM(waga) as 'suma wag' from zasob group by rodzaj;
 +--------------------+----------+
 7 rows in set (0.00 sec)
 
+mysql> SELECT nazwa, AVG(waga) AS 'srednia waga' FROM zasob GROUP BY nazwa HAVING SUM(ilosc) >= 4 AND SUM(waga) > 10;
++---------------+--------------+
+| nazwa         | srednia waga |
++---------------+--------------+
+| kokos         |     4.333333 |
+| skora geparda |    30.000000 |
++---------------+--------------+
+
+mysql> SELECT rodzaj, COUNT(nazwa) AS "ilosc nazw" FROM zasob GROUP BY rodzaj HA
+VING COUNT(nazwa) > 1;
++--------------------+------------+
+| rodzaj             | ilosc nazw |
++--------------------+------------+
+| jedzenie           |          9 |
+| NULL               |          7 |
+| ubranie            |          4 |
+| narzedzie zbrodni  |          3 |
+| material budowlany |          2 |
+| miejsce wypoczynku |          2 |
++--------------------+------------+
+
+mysql> select distinct count(nazwa) as liczbanazw, rodzaj  from zasob group by nazwa  having Min(ilosc)>1;
++------------+--------------------+
+| liczbanazw | rodzaj             |
++------------+--------------------+
+|          1 | NULL               |
+|          1 | jedzenie           |
+|          1 | material budowlany |
+|          1 | narzedzie zbrodni  |
+|          1 | ubranie            |
+|          2 | jedzenie           |
+|          4 | NULL               |
++------------+--------------------+
+
+mysql> select nazwa,sum(ilosc) as "ilosc zasobow" from kreatura natural join ekw
+ipunek group by nazwa;
++-----------+---------------+
+| nazwa     | ilosc zasobow |
++-----------+---------------+
+| Bjorn     |            64 |
+| Brutal    |             4 |
+| Astrid    |             6 |
+| Khorad    |             1 |
+| Ibra      |             2 |
+| Tesciowa  |             5 |
+| Defgard   |            55 |
+| Bjolkolur |            12 |
+| Drozd     |             1 |
+| Szczeki   |             1 |
++-----------+---------------+
+
+mysql> SELECT kreatura.nazwa, zasob.nazwa FROM kreatura JOIN ekwipunek ON ekwipunek.idKreatury = kreatura.idKreatury JOIN zasob  ON zasob.idZasobu = ekwipunek.idZasobu;
++-----------+-------------------+
+| nazwa     | nazwa             |
++-----------+-------------------+
+| Astrid    | kokos             |
+| Bjorn     | kokos             |
+| Defgard   | siekiera          |
+| Brutal    | siekiera          |
+| Bjorn     | siekiera          |
+| Brutal    | kokos             |
+| Szczeki   | opos              |
+| Bjorn     | stanik            |
+| Astrid    | stanik            |
+| Drozd     | stanik            |
+| Bjorn     | buty              |
+| Bjorn     | lisc palmowy      |
+| Defgard   | skora geparda     |
+| Ibra      | skora geparda     |
+| Defgard   | kiel slonia       |
+| Khorad    | kiel slonia       |
+| Bjorn     | topor             |
+| Ibra      | dzida             |
+| Astrid    | luk               |
+| Defgard   | pnacza            |
+| Bjolkolur | pnacza            |
+| Bjolkolur | deski             |
+| Bjorn     | hamak             |
+| Tesciowa  | chatka na drzewie |
+| Tesciowa  | nie wiadomo co    |
+| Tesciowa  | ogien do ziania   |
+| Tesciowa  | miotla            |
++-----------+-------------------+
+
+mysql> SELECT kreatura.nazwa FROM kreatura LEFT JOIN ekwipunek ON kreatura.idKreatury = ekwipunek.idKreatury WHERE ekwipunek.idKreatury IS NULL;
++----------------------------+
+| nazwa                      |
++----------------------------+
+| Birgun                     |
+| Nemo                       |
+| Loko                       |
+| Ara                        |
+| Tiki                       |
+| Dziadek                    |
+| sztuczna szczeka tesciowej |
+| Tesciowa dziadka           |
+| Babajaga                   |
++----------------------------+
+
+mysql> mysql> SELECT kreatura.nazwa, zasob.nazwa FROM kreatura JOIN ekwipunek ON ekwipunek.idKreatury = kredKreatury JOIN zasob ON zasob.idZasobu = ekwipunek.idZasobu WHERE YEAR(dataUR) BETWEEN 1600 AND 1699;
++-----------+-------------------+
+| nazwa     | nazwa             |
++-----------+-------------------+
+| Astrid    | kokos             |
+| Bjorn     | kokos             |
+| Defgard   | siekiera          |
+| Brutal    | siekiera          |
+| Bjorn     | siekiera          |
+| Brutal    | kokos             |
+| Szczeki   | opos              |
+| Bjorn     | stanik            |
+| Astrid    | stanik            |
+| Drozd     | stanik            |
+| Bjorn     | buty              |
+| Bjorn     | lisc palmowy      |
+| Defgard   | skora geparda     |
+| Ibra      | skora geparda     |
+| Defgard   | kiel slonia       |
+| Khorad    | kiel slonia       |
+| Bjorn     | topor             |
+| Ibra      | dzida             |
+| Astrid    | luk               |
+| Defgard   | pnacza            |
+| Bjolkolur | pnacza            |
+| Bjolkolur | deski             |
+| Bjorn     | hamak             |
+| Tesciowa  | chatka na drzewie |
+| Tesciowa  | nie wiadomo co    |
+| Tesciowa  | ogien do ziania   |
+| Tesciowa  | miotla            |
++-----------+-------------------+
+
+mysql> SELECT kreatura.nazwa FROM kreatura JOIN ekwipunek ON ekwipunek.idKreatury = kreatura.idKreatury JOIN zasob ON zasob.idZasobu = ekwipunek.idZasobu WHERE zasob.rodzaj = 'jedzenie' AND kreatura.rodzaj = 'wiking' ORDER BY dataUr ASC LIMIT 5;
++--------+
+| nazwa  |
++--------+
+| Bjorn  |
+| Brutal |
+| Astrid |
++--------+
+
+mysql> select concat (k1.nazwa, " - ",  k1.idkreatury) as nazwa1, concat (k2.nazwa, " - ", k2.idkreatury) as nazwa2 from kreatura k1 join kreatura k2 where k2.idkreatury-k1.idkreatury=5;
++---------------+---------------------------------+
+| nazwa1        | nazwa2                          |
++---------------+---------------------------------+
+| Bjorn - 1     | Astrid - 6                      |
+| Brutal - 2    | Ibra - 7                        |
+| Khorad - 3    | Bjolkolur - 8                   |
+| Birgun - 4    | Nemo - 9                        |
+| Defgard - 5   | Loko - 10                       |
+| Astrid - 6    | Drozd - 11                      |
+| Ibra - 7      | Ara - 12                        |
+| Bjolkolur - 8 | Szczeki - 13                    |
+| Nemo - 9      | Tesciowa - 14                   |
+| Loko - 10     | Tiki - 15                       |
+| Drozd - 11    | Dziadek - 16                    |
+| Ara - 12      | sztuczna szczeka tesciowej - 17 |
+| Szczeki - 13  | Tesciowa dziadka - 18           |
++---------------+---------------------------------+
