@@ -1,1 +1,87 @@
+mysql> create table uczestnicy as select *from wikingowie.uczestnicy;
+Query OK, 18 rows affected (0.19 sec)
+Records: 18  Duplicates: 0  Warnings: 0
+mysql> create table etapy_wyprawy as select *from wikingowie.etapy_wyprawy;
+Query OK, 15 rows affected (0.16 sec)
+Records: 15  Duplicates: 0  Warnings: 0
+mysql> create table sektor as select *from wikingowie.sektor;
+Query OK, 9 rows affected (0.24 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+mysql> create table wyprawa as select *from wikingowie.wyprawa;
+Query OK, 4 rows affected (0.24 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+
+mysql> select nazwa from kreatura where idkreatury NOT IN (select id_uczestnika from uczestnicy);
++----------+
+| nazwa    |
++----------+
+| Brutal   |
+| Defgard  |
+| Ara      |
+| Gollum   |
+| Babajaga |
++----------+
+5 rows in set (0.00 sec)
+
+
+mysql> select wyprawa.nazwa as "nazwa wyprawy", sum(ekwipunek.ilosc) as "suma ilosci ekwipunku" from wyprawa inner join uczestnicy on wyprawa.id_wyprawy=uczestnicy.id_wyprawy inner join kreatura on uczestnicy.id_uczestnika=kreatura.idkreatury inner join ekwipunek on kreatura.idkreatury=ekwipunek.idkreatury group by wyprawa.nazwa;
++-----------------------+-----------------------+
+| nazwa wyprawy         | suma ilosci ekwipunku |
++-----------------------+-----------------------+
+| Polowanie na tesciowa |                    68 |
+| Nakarm kanibala       |                    84 |
+| Poszukiwanie ziecia   |                     5 |
++-----------------------+-----------------------+
+3 rows in set (0.00 sec)
+
+
+mysql> select wyprawa.nazwa, count(uczestnicy.id_uczestnika), group_concat(kreatura.nazwa) from wyprawa inner join uczestnicy on wyprawa.id_wyprawy=uczestnicy.id_wyprawy inner join kreatura on uczestnicy.id_uczestnika=kreatura.idkreatury group by wyprawa.nazwa;
++-----------------------+---------------------------------+----------------------------------------------------------------+
+| nazwa                 | count(uczestnicy.id_uczestnika) | group_concat(kreatura.nazwa)                                   |
++-----------------------+---------------------------------+----------------------------------------------------------------+
+| Nakarm kanibala       |                               6 | Bjorn,Khorad,Astrid,Dziadek,Bjolkolur,Drozd                    |
+| Polowanie na tesciowa |                               7 | Bjorn,Dziadek,Szczeki,Drozd,Loko,Ibra,Birgun                   |
+| Poszukiwanie ziecia   |                               5 | Nemo,Tesciowa,Tiki,sztuczna szczeka tesciowej,Tesciowa dziadka |
++-----------------------+---------------------------------+----------------------------------------------------------------+
+3 rows in set (0.00 sec)
+
+
+mysql> select etapy_wyprawy.idetapu, etapy_wyprawy.idwyprawy, wyprawa.nazwa as "nazwa wyprawy", sektor.nazwa as "nazwa sektora", kreatura.nazwa as kierownik from etapy_wyprawy inner join sektor on etapy_wyprawy.sektor=sektor.id_sektora inner join wyprawa on etapy_wyprawy.idwyprawy=wyprawa.id_wyprawy inner join kreatura on wyprawa.kierownik=kreatura.idkreatury order by wyprawa.data_rozpoczecia ASC, etapy_wyprawy.kolejnosc ASC;
++---------+-----------+-----------------------+--------------------+-----------+
+| idetapu | idwyprawy | nazwa wyprawy         | nazwa sektora      | kierownik |
++---------+-----------+-----------------------+--------------------+-----------+
+|       1 |         1 | Poszukiwanie ziecia   | Pieczara tesciowej | Tesciowa  |
+|      11 |         3 | Nakarm kanibala       | Chatka dziadka     | Dziadek   |
+|       2 |         1 | Poszukiwanie ziecia   | Wulkan             | Tesciowa  |
+|      12 |         3 | Nakarm kanibala       | Pieczara tesciowej | Dziadek   |
+|       3 |         1 | Poszukiwanie ziecia   | Wioska Kanibali    | Tesciowa  |
+|      13 |         3 | Nakarm kanibala       | Zatoka rekinow     | Dziadek   |
+|       4 |         1 | Poszukiwanie ziecia   | Pieprzne pole      | Tesciowa  |
+|      14 |         3 | Nakarm kanibala       | Wulkan             | Dziadek   |
+|       5 |         1 | Poszukiwanie ziecia   | Chatka dziadka     | Tesciowa  |
+|      15 |         3 | Nakarm kanibala       | Wioska Kanibali    | Dziadek   |
+|       6 |         2 | Polowanie na tesciowa | Kokosowa plaza     | Bjorn     |
+|       7 |         2 | Polowanie na tesciowa | Chatka dziadka     | Bjorn     |
+|       8 |         2 | Polowanie na tesciowa | Wulkan             | Bjorn     |
+|       9 |         2 | Polowanie na tesciowa | Zatoka rekinow     | Bjorn     |
+|      10 |         2 | Polowanie na tesciowa | Pieczara tesciowej | Bjorn     |
++---------+-----------+-----------------------+--------------------+-----------+
+
+
+mysql> select sektor.nazwa as "nazwa sektora", IFNULL(count(etapy_wyprawy.sektor), 0) as "liczba odwiedzin" from sektor left join etapy_wyprawy on sektor.id_sektora=etapy_wyprawy.sektor group by sektor.id_sektora;
++--------------------+------------------+
+| nazwa sektora      | liczba odwiedzin |
++--------------------+------------------+
+| Wioska Kanibali    |                2 |
+| Zabojcza skala     |                0 |
+| Magiczna jaskinia  |                0 |
+| Pieprzne pole      |                1 |
+| Wulkan             |                3 |
+| Pieczara tesciowej |                3 |
+| Chatka dziadka     |                3 |
+| Kokosowa plaza     |                1 |
+| Zatoka rekinow     |                2 |
++--------------------+------------------+
+
 
