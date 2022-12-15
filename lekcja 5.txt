@@ -123,12 +123,13 @@ mysql> select wyprawa.nazwa, sum(length(etapy_wyprawy.dziennik)) as 'liczba znak
 2 rows in set (0.00 sec)
 
 
-mysql> select wyprawa.nazwa, (SUM(zasob.waga*ekwipunek.ilosc))/count(uczestnicy.id_uczestnika) from wyprawa join uczestnicy on wyprawa.id_wyprawy=uczestnicy.id_wyprawy join ekwipunek on uczestnicy.id_uczestnika=ekwipunek.idkreatury join zasob on ekwipunek.idzasobu=zasob.idzasobu group by wyprawa.nazwa;
-+-----------------------+-------------------------------------------------------------------+
-| nazwa                 | (SUM(zasob.waga*ekwipunek.ilosc))/count(uczestnicy.id_uczestnika) |
-+-----------------------+-------------------------------------------------------------------+
-| Nakarm kanibala       |                                                          5.364286 |
-| Polowanie na tesciowa |                                                          9.427273 |
-| Poszukiwanie ziecia   |                                                          3.500000 |
-+-----------------------+-------------------------------------------------------------------+
+
+mysql> select wyprawa.nazwa, (SUM(zasob.waga*ekwipunek.ilosc))/count(uczestnicy.id_uczestnika) as 'srednia waga zasobow' from wyprawa join uczestnicy on wyprawa.id_wyprawy=uczestnicy.id_wyprawy join ekwipunek on uczestnicy.id_uczestnika=ekwipunek.idkreatury join zasob on ekwipunek.idzasobu=zasob.idzasobu group by wyprawa.nazwa;
++-----------------------+----------------------+
+| nazwa                 | srednia waga zasobow |
++-----------------------+----------------------+
+| Nakarm kanibala       |             5.364286 |
+| Polowanie na tesciowa |             9.427273 |
+| Poszukiwanie ziecia   |             3.500000 |
++-----------------------+----------------------+
 3 rows in set (0.00 sec)
