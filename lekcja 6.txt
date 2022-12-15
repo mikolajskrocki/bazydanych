@@ -1,0 +1,2 @@
+mysql> create trigger wagaa before insert on kreatura for each row begin if new.waga>0 then signal sqlstate '45000' set message_text='waga<0'; end if; end;//
+Query OK, 0 rows affected (0.00 sec)
