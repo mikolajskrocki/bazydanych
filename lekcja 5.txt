@@ -135,3 +135,24 @@ mysql> select wyprawa.nazwa, (SUM(zasob.waga*ekwipunek.ilosc))/count(uczestnicy.
 3 rows in set (0.00 sec)
 
 
+mysql> select kreatura.nazwa, datediff(wyprawa.data_rozpoczecia,kreatura.dataur) as 'wiek w dniach' from kreatura join uczestnicy on uczestnicy.id_uczestnika=kreatura.idkreatury join wyprawa on uczestnicy.id_wyprawy=wyprawa.id_wyprawy join etapy_wyprawy on wyprawa.id_wyprawy=etapy_wyprawy. idwyprawy join sektor on etapy_wyprawy.sektor=sektor.id_sektora where sektor.nazwa='chatka dziadka' group by kreatura.nazwa;
++----------------------------+---------------+
+| nazwa                      | wiek w dniach |
++----------------------------+---------------+
+| Bjorn                      |         11080 |
+| Khorad                     |         10610 |
+| Birgun                     |          9216 |
+| Astrid                     |          8384 |
+| Ibra                       |          9678 |
+| Bjolkolur                  |          8890 |
+| Nemo                       |          8339 |
+| Loko                       |          8338 |
+| Drozd                      |          9157 |
+| Szczeki                    |          9616 |
+| Tesciowa                   |         16376 |
+| Tiki                       |         10220 |
+| Dziadek                    |         20279 |
+| sztuczna szczeka tesciowej |          7293 |
+| Tesciowa dziadka           |         25661 |
++----------------------------+---------------+
+
