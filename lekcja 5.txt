@@ -85,3 +85,29 @@ mysql> select sektor.nazwa as "nazwa sektora", IFNULL(count(etapy_wyprawy.sektor
 +--------------------+------------------+
 
 
+mysql> select kreatura.nazwa, if(uczestnicy.id_uczestnika>0, 'bral udzial w wyprawie', 'nie bral udzialu w wyprawie') as udzial from kreatura left join uczestnicy on kreatura.idkreatury=uczestnicy.id_uczestnika group by kreatura.nazwa;
++----------------------------+-----------------------------+
+| nazwa                      | udzial                      |
++----------------------------+-----------------------------+
+| Bjorn                      | bral udzial w wyprawie      |
+| Brutal                     | nie bral udzialu w wyprawie |
+| Khorad                     | bral udzial w wyprawie      |
+| Birgun                     | bral udzial w wyprawie      |
+| Defgard                    | nie bral udzialu w wyprawie |
+| Astrid                     | bral udzial w wyprawie      |
+| Ibra                       | bral udzial w wyprawie      |
+| Bjolkolur                  | bral udzial w wyprawie      |
+| Nemo                       | bral udzial w wyprawie      |
+| Loko                       | bral udzial w wyprawie      |
+| Drozd                      | bral udzial w wyprawie      |
+| Ara                        | nie bral udzialu w wyprawie |
+| Szczeki                    | bral udzial w wyprawie      |
+| Tesciowa                   | bral udzial w wyprawie      |
+| Tiki                       | bral udzial w wyprawie      |
+| Dziadek                    | bral udzial w wyprawie      |
+| sztuczna szczeka tesciowej | bral udzial w wyprawie      |
+| Tesciowa dziadka           | bral udzial w wyprawie      |
+| Gollum                     | nie bral udzialu w wyprawie |
+| Babajaga                   | nie bral udzialu w wyprawie |
++----------------------------+-----------------------------+
+20 rows in set (0.00 sec)
