@@ -133,3 +133,5 @@ mysql> select wyprawa.nazwa, (SUM(zasob.waga*ekwipunek.ilosc))/count(uczestnicy.
 | Poszukiwanie ziecia   |             3.500000 |
 +-----------------------+----------------------+
 3 rows in set (0.00 sec)
+
+chuj
